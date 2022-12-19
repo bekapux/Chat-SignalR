@@ -22,6 +22,79 @@ namespace Chat.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ApplicationUserChatGroup", b =>
+                {
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MembersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GroupsId", "MembersId");
+
+                    b.HasIndex("MembersId");
+
+                    b.ToTable("ApplicationUserChatGroup");
+                });
+
+            modelBuilder.Entity("Chat.Identity.Models.Domain.ChatGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Chat.Identity.Models.Domain.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ChatGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateSent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("MessageText")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatGroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Chat.Identity.Models.IdentityModels.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -109,7 +182,7 @@ namespace Chat.Migrations
                         {
                             Id = "11111111-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f6bc77d5-2d2b-4987-a454-d681591f7151",
+                            ConcurrencyStamp = "ea5671e5-d34f-46ce-bdcd-ebbdacf06c55",
                             Email = "admin",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -118,9 +191,9 @@ namespace Chat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "Admin",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGjgtDDbY1hx6zm2LK8WelG9YgPA/ayeNcgenXEAWLaglZEy4pIsfdej3RTmopvmzw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFLMvnl35ucvptdWKP5BEXKdvZjDQk6KJi5Qn/4FIDbD/HF/f9AJQBV+HUq/TIF/Wg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "00d4a321-3074-4900-8d6f-d67a3c86cec4",
+                            SecurityStamp = "6bfa54b0-c5d9-4c0a-846e-288608e1e434",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -128,7 +201,7 @@ namespace Chat.Migrations
                         {
                             Id = "22222222-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cd83124a-4ac2-4eca-99a2-52b977652b0d",
+                            ConcurrencyStamp = "9bfa7f60-5f9e-4ed9-9665-e1bc1e8fd49e",
                             Email = "user",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -137,9 +210,9 @@ namespace Chat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK0p8PICVoo9LWlyQKCv3TFWhfL9REUChZq0cOHcb7N31VojVlUTwZH1P/KJbh5laQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJdAFVDPFERSreJMLxB8yPAMGujZrohS/uxTGFKdowDjxCP25X3XtE8mP/5pLp3o9w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "60b3ed87-f367-4ad5-a6a4-8c3acae1751f",
+                            SecurityStamp = "9b38b540-6158-4c9d-9127-c21ad579d388",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         });
@@ -309,7 +382,7 @@ namespace Chat.Migrations
                         new
                         {
                             Id = "11111111-1111-1111-1111-111111111111",
-                            ConcurrencyStamp = "3b7997f1-8d5b-4ef2-8274-7667b16c59c2",
+                            ConcurrencyStamp = "4ef8d1bc-21b9-4933-9524-cd46403b23bd",
                             Name = "Admin",
                             NormalizedName = "admin",
                             IsActive = true
@@ -317,11 +390,45 @@ namespace Chat.Migrations
                         new
                         {
                             Id = "22222222-2222-2222-2222-222222222222",
-                            ConcurrencyStamp = "52606779-f818-48c8-86ae-4114b20beb0c",
+                            ConcurrencyStamp = "37800da3-5e34-4998-87f5-f847f715c0ca",
                             Name = "User",
                             NormalizedName = "USER",
                             IsActive = true
                         });
+                });
+
+            modelBuilder.Entity("ApplicationUserChatGroup", b =>
+                {
+                    b.HasOne("Chat.Identity.Models.Domain.ChatGroup", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chat.Identity.Models.IdentityModels.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("MembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Chat.Identity.Models.Domain.ChatMessage", b =>
+                {
+                    b.HasOne("Chat.Identity.Models.Domain.ChatGroup", "ChatGroup")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("ChatGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chat.Identity.Models.IdentityModels.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatGroup");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -373,6 +480,11 @@ namespace Chat.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Chat.Identity.Models.Domain.ChatGroup", b =>
+                {
+                    b.Navigation("ChatMessages");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Chat.Identity.Configuration
 {
-    public class ApplicationRoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
+    public class RoleConfig : IEntityTypeConfiguration<ApplicationRole>
     {
         public void Configure(EntityTypeBuilder<ApplicationRole> builder)
         {

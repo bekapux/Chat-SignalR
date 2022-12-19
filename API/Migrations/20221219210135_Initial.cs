@@ -55,6 +55,19 @@ namespace Chat.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Groups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GetDate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -160,13 +173,66 @@ namespace Chat.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserChatGroup",
+                columns: table => new
+                {
+                    GroupsId = table.Column<int>(type: "int", nullable: false),
+                    MembersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserChatGroup", x => new { x.GroupsId, x.MembersId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserChatGroup_AspNetUsers_MembersId",
+                        column: x => x.MembersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserChatGroup_Groups_GroupsId",
+                        column: x => x.GroupsId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MessageText = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    DateSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    ChatGroupId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Groups_ChatGroupId",
+                        column: x => x.ChatGroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "IsActive", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "11111111-1111-1111-1111-111111111111", "3b7997f1-8d5b-4ef2-8274-7667b16c59c2", "ApplicationRole", true, "Admin", "admin" },
-                    { "22222222-2222-2222-2222-222222222222", "52606779-f818-48c8-86ae-4114b20beb0c", "ApplicationRole", true, "User", "USER" }
+                    { "11111111-1111-1111-1111-111111111111", "4ef8d1bc-21b9-4933-9524-cd46403b23bd", "ApplicationRole", true, "Admin", "admin" },
+                    { "22222222-2222-2222-2222-222222222222", "37800da3-5e34-4998-87f5-f847f715c0ca", "ApplicationRole", true, "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -174,8 +240,8 @@ namespace Chat.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "11111111-1111-1111-1111-111111111111", 0, "f6bc77d5-2d2b-4987-a454-d681591f7151", "admin", true, "System", true, "Admin", false, null, "Admin", "ADMIN", "AQAAAAEAACcQAAAAEGjgtDDbY1hx6zm2LK8WelG9YgPA/ayeNcgenXEAWLaglZEy4pIsfdej3RTmopvmzw==", null, null, false, "00d4a321-3074-4900-8d6f-d67a3c86cec4", false, "admin" },
-                    { "22222222-2222-2222-2222-222222222222", 0, "cd83124a-4ac2-4eca-99a2-52b977652b0d", "user", true, "System", true, "User", false, null, "USER", "USER", "AQAAAAEAACcQAAAAEK0p8PICVoo9LWlyQKCv3TFWhfL9REUChZq0cOHcb7N31VojVlUTwZH1P/KJbh5laQ==", null, null, false, "60b3ed87-f367-4ad5-a6a4-8c3acae1751f", false, "user" }
+                    { "11111111-1111-1111-1111-111111111111", 0, "ea5671e5-d34f-46ce-bdcd-ebbdacf06c55", "admin", true, "System", true, "Admin", false, null, "Admin", "ADMIN", "AQAAAAEAACcQAAAAEFLMvnl35ucvptdWKP5BEXKdvZjDQk6KJi5Qn/4FIDbD/HF/f9AJQBV+HUq/TIF/Wg==", null, null, false, "6bfa54b0-c5d9-4c0a-846e-288608e1e434", false, "admin" },
+                    { "22222222-2222-2222-2222-222222222222", 0, "9bfa7f60-5f9e-4ed9-9665-e1bc1e8fd49e", "user", true, "System", true, "User", false, null, "USER", "USER", "AQAAAAEAACcQAAAAEJdAFVDPFERSreJMLxB8yPAMGujZrohS/uxTGFKdowDjxCP25X3XtE8mP/5pLp3o9w==", null, null, false, "9b38b540-6158-4c9d-9127-c21ad579d388", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -187,6 +253,11 @@ namespace Chat.Migrations
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { "22222222-2222-2222-2222-222222222222", "22222222-2222-2222-2222-222222222222" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserChatGroup_MembersId",
+                table: "ApplicationUserChatGroup",
+                column: "MembersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -226,10 +297,23 @@ namespace Chat.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatGroupId",
+                table: "Messages",
+                column: "ChatGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_UserId",
+                table: "Messages",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationUserChatGroup");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -246,10 +330,16 @@ namespace Chat.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
         }
     }
 }

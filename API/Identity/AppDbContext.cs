@@ -1,4 +1,5 @@
-﻿using Chat.Identity.Models.IdentityModels;
+﻿using Chat.Identity.Models.Domain;
+using Chat.Identity.Models.IdentityModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -14,5 +15,8 @@ namespace Chat.Identity
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-    }
+
+        public DbSet<ChatMessage> Messages { get; set; }
+        public DbSet<ChatGroup> Groups { get; set; }
+}
 }
