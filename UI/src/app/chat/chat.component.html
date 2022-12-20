@@ -1,1 +1,9 @@
 <app-nav></app-nav>
+<input type="text" [(ngModel)]="messageInput" />
+<button (click)="sendMessage()">Send</button>
+
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let message of messages">
+    {{ message.userName }} : {{ message.messageText }}
+  </li>
+</ul>

@@ -4,7 +4,6 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="card bg-dark text-light">
           <div class="card-body">
-            <h5 class="card-title">Sign In</h5>
             <div class="form-floating mb-3">
               <input
                 type="email"
@@ -36,10 +35,10 @@
             <div class="d-grid gap-2">
               <button
                 [disabled]="isLoading"
-                class="btn btn-success"
+                class="btn btn-primary pulse"
                 type="submit"
               >
-                <span *ngIf="!isLoading">Button</span>
+                <span *ngIf="!isLoading">Sign In</span>
                 <span
                   *ngIf="isLoading"
                   class="spinner-border spinner-border-sm"
