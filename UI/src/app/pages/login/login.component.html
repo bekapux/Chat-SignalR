@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12 mx-auto">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="card">
+        <div class="card bg-dark text-light">
           <div class="card-body">
             <h5 class="card-title">Sign In</h5>
             <div class="form-floating mb-3">
@@ -12,7 +12,7 @@
                 class="form-control"
                 placeholder="name@example.com"
               />
-              <label for="email">Email address</label>
+              <label for="email" class="text-dark">Email address</label>
             </div>
             <div class="form-floating mb-3">
               <input
@@ -21,7 +21,7 @@
                 class="form-control"
                 placeholder="password"
               />
-              <label for="password">Password</label>
+              <label for="password" class="text-dark">Password</label>
             </div>
             <div class="form-check mb-3">
               <input
@@ -34,7 +34,18 @@
               </label>
             </div>
             <div class="d-grid gap-2">
-              <button class="btn btn-primary" type="submit">Button</button>
+              <button
+                [disabled]="isLoading"
+                class="btn btn-success"
+                type="submit"
+              >
+                <span *ngIf="!isLoading">Button</span>
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                ></span>
+              </button>
             </div>
           </div>
         </div>

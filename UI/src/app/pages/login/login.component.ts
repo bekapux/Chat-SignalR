@@ -18,9 +18,12 @@ export class LoginComponent {
     rememberMe: new FormControl(false),
   });
 
+  isLoading: boolean = false;
+
   constructor(private auth: AuthService, private router: Router) {}
 
   onSubmit() {
+    this.isLoading = true;
     const sub = this.auth
       .login({
         email: this.loginForm.value.email,
@@ -29,11 +32,12 @@ export class LoginComponent {
       })
       .subscribe(
         (res) => {
+          this.isLoading = false;
           console.log(res);
           sub.unsubscribe();
-          this.router.navigateByUrl('chat')
         },
         (err) => {
+          this.isLoading = false;
           console.log(err);
           sub.unsubscribe();
         }
