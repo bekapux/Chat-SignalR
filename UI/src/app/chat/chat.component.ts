@@ -8,20 +8,20 @@ import {
   HubConnection,
   HubConnectionBuilder,
 } from '@microsoft/signalr';
+import { LogLevel } from '@microsoft/signalr/dist/esm/ILogger';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent {
   connection: HubConnection | undefined;
   messages: MessageModel[] = [];
   messageInput = '';
   user: AuthResponse | null = null;
 
-  constructor(private auth: AuthService) {}
-  ngOnInit(): void {
+  constructor(private auth: AuthService) {
     this.auth.$user.subscribe((res) => {
       this.user = res;
       this.connection = new HubConnectionBuilder()
@@ -30,6 +30,8 @@ export class ChatComponent implements OnInit {
           skipNegotiation: true,
           transport: HttpTransportType.WebSockets,
         })
+        .withAutomaticReconnect()
+        .configureLogging(LogLevel.Critical)
         .build();
 
       this.connection.on('message', (x: MessageModel[]) => {
@@ -37,7 +39,9 @@ export class ChatComponent implements OnInit {
       });
       this.connection
         .start()
-        .then(() => {})
+        .then(() => {
+          this.connection?.invoke("sendMessage", null)
+        })
         .catch((err) => {
           console.log(err);
         });
